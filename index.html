@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Quiz - Fully Dynamic</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-box">
+    <div id="step-phone" class="reg-box">
+        <h2 class="main-head" style="color:#1e3f66">Verify Your Number</h2>
+        <input type="tel" id="userPhone" class="login-input" placeholder="Enter Mobile Number" onkeypress="if(event.key === 'Enter') handlePhone()">
+        <div id="otp-area" style="display:none; margin-top:10px;">
+            <p style="font-weight:bold; color:red;">Enter OTP (1234)</p>
+            <input type="number" id="otpInput" class="login-input" placeholder="4-Digit OTP" onkeypress="if(event.key === 'Enter') handlePhone()">
+        </div>
+        <button id="phoneBtn" class="login-btn" onclick="handlePhone()">Next</button>
+    </div>
+
+    <div id="step-name" class="reg-box" style="display:none;">
+        <h2 class="main-head" style="color:#1e3f66">Almost There!</h2>
+        <p class="sub-head">Enter Your Details</p>
+        <input type="text" id="fName" class="login-input" placeholder="First Name" onkeypress="if(event.key === 'Enter') startQuiz()">
+        <input type="text" id="lName" class="login-input" placeholder="Surname" onkeypress="if(event.key === 'Enter') startQuiz()">
+        <br>
+        <button class="login-btn" onclick="startQuiz()">Start Game</button>
+    </div>
+
+    <div id="quiz-content" style="display:none;">
+        <div id="user-banner">Welcome, <span id="display-name"></span>! 👋</div>
+        
+        <div class="heading-box">
+            <p id="label-lang" class="main-head">Select Language</p>
+            <p class="sub-head">زبان منتخب کریں </p>
+            <select id="languageSelect" onchange="updateInterface()">
+                <option value="en">English</option>
+                <option value="hi">Hindi (हिंदी)</option>
+                <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                <option value="bho">Bhojpuri (भोजपुरी)</option>
+                <option value="hi">Haryanvi (हरियाणवी)</option>
+                <option value="ur">Urdu (اردو)</option>
+                <option value="mr">Marathi (मराठी)</option>
+                <option value="ta">Tamil (தமிழ்)</option>
+                <option value="te">Telugu (తెలుగు)</option>
+                <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                <option value="ml">Malayalam (मलयालम)</option>
+                <option value="zh">Chinese (中文)</option>
+                <option value="fr">French (Français)</option>
+                <option value="es">Spanish (Español)</option>
+                <option value="ar">Arabic (العربية)</option>
+                <option value="ja">Japanese (日本語)</option>
+                <option value="ru">Russian (Русский)</option> 
+            </select>
+        </div>
+
+        <div class="heading-box">
+            <p id="label-cat" class="main-head">Select Category</p>
+            <p id="sub-label-cat" class="sub-head">زمرہ منتخب کریں</p>
+            <select id="categorySelect" onchange="resetScore()">
+                <option value="18">Computer Science (Java, C, C++, Python, HTML, CSS, JS)</option>
+                <option value="19">Mathematics (Class 1-12 & B.Tech Level)</option>
+                <option value="17">Physics</option>
+                <option value="17">Chemistry</option>
+                <option value="17">Biology</option>
+                <option value="23">History</option>
+                <option value="22">Geography</option>
+                <option value="21">Sports</option>
+                <option value="24">Politics</option>
+                <option value="27">Animals</option>
+                <option value="30">Gadgets & Technology</option>
+                <option value="17">General Science & Nature</option>
+            </select>
+        </div>
+
+        <div class="status-area">
+            <div id="timer">Time Left: 30s</div>
+            <div id="score-container"><span id="score">Score: 0</span></div>
+        </div>
+
+        <button id="hintBtn" onclick="useHint()">💡 Hint (50-50)</button>
+
+        <div class="speaker-wrapper" id="speaker-area">
+            <button id="speaker-btn" onclick="toggleSpeech()">🔊</button>
+        </div>
+        <h2 id="question"></h2> 
+        <div id="options-container">
+            <div class="option-column" id="left-column"></div>
+            <div class="option-column" id="right-column"></div>
+        </div>
+        <p id="message"></p>
+        <button id="nextBtn" onclick="loadQuestion()">Start Quiz Now 🚀</button>
+        <button id="finishBtn" onclick="showFinalResult()">Finish Quiz & See Result</button>
+    </div>
+
+    <div id="leaderboard-area">
+        <h2 style="color:#1e3f66">🏆 Global Leaderboard</h2>
+        <table>
+            <thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead>
+            <tbody id="leaderboard-body"><tr><td colspan="3">Loading...</td></tr></tbody>
+        </table>
+        <button class="login-btn" onclick="playAgainWithoutReg()">Play Again</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
